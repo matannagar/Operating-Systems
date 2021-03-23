@@ -1,0 +1,15 @@
+gcc -Wall -g main1_1.c hello_ariel.c -o hello1
+./hello1
+Hello Ariel
+gcc -shared hello_ariel.c -fPIC -o libHello.so
+export LD_LIBRARY_PATH=.
+gcc -Wall -g main1_2.c -L. -l Hello -o hello2
+./hello2
+Hello Ariel
+gcc -Wall -g main1_3.c -fPIC -ldl -o hello3
+./hello3
+Hello Ariel
+make clean
+make[1]: Entering directory '/home/matanbn/Dropbox/Ariel University/myGit/operating_systems/ex1 (Case Conflict)/task_a'
+rm -f *.o *.a *.so *.exe hello1 hello2 hello3
+make[1]: Leaving directory '/home/matanbn/Dropbox/Ariel University/myGit/operating_systems/ex1 (Case Conflict)/task_a'

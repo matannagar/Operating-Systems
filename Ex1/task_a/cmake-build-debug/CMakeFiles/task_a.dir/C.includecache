@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/matanbn/CLionProjects/task_a/hello_ariel.c
+stdio.h
+-
+hello_ariel.h
+/home/matanbn/CLionProjects/task_a/hello_ariel.h
+
+/home/matanbn/CLionProjects/task_a/hello_ariel.h
+
+/home/matanbn/CLionProjects/task_a/main1_1.c
+stdio.h
+-
+hello_ariel.h
+/home/matanbn/CLionProjects/task_a/hello_ariel.h
+

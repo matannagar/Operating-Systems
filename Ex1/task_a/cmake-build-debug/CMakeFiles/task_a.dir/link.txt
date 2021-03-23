@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/task_a.dir/main1_1.c.o CMakeFiles/task_a.dir/hello_ariel.c.o  -o task_a 
