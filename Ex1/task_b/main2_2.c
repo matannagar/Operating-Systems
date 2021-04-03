@@ -14,7 +14,7 @@ void print(const char *who){
 	}
 }
 int child(void *params){
-	print("child_thread");
+	print("main2_2: Child");
 	return 0;
 }
 
@@ -24,8 +24,8 @@ int main(){
 	int result2 = clone(child,child_stack+STACK_SIZE,CLONE_PARENT,0);
 
 	printf("clone result= %d\n",result);
-printf("clone result= %d\n",result2);
-	print("parent");
+	printf("clone result= %d\n",result2);
+	print("Parent");
 
 	return 0;
 }

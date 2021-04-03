@@ -7,6 +7,7 @@ int main(){
 	pid_t pid = fork();
 
 	if(pid==0){
+
 		chdir("/"); //change location to root directory. 
 
 		setsid(); //move it to another session, so we can close the parent process.
@@ -17,8 +18,8 @@ int main(){
 		close(stdin);
 		close(stderr);
 
-		openlog ("myDaemon",LOG_PID, LOG_DAEMON);
-		syslog(LOG_NOTICE,"damon started 2");
+		openlog("myDeamon",LOG_PID, LOG_DAEMON);
+		syslog(LOG_NOTICE,"daemon started 2");
 		usleep(3000000);
 		syslog(LOG_NOTICE,"doing some work...2");
 		usleep(3000000);

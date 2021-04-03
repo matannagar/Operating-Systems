@@ -1,0 +1,1 @@
+libHello.so: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=722ae05f122409b8894415c37be3ec116d1995fa, not stripped

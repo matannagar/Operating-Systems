@@ -1,3 +1,0 @@
-/home/matanbn/CLionProjects/task_a/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/matanbn/CLionProjects/task_a/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/matanbn/CLionProjects/task_a/cmake-build-debug/CMakeFiles/task_a.dir
