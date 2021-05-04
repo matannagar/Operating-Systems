@@ -4,8 +4,8 @@
 #include <pthread.h>
 #include <math.h>
 
-#define NUM_THREADS 5
-#define run_n 10000
+#define NUM_THREADS 80
+#define run_n 10000000
 
 pthread_mutex_t lock;
 long sum = 0;
@@ -32,12 +32,13 @@ int isPrime(int num)
 
 void *func(void *var)
 {
-	for (int i = 0; i < 2000; ++i)
+	int random ;
+	for (int i = 0; i < run_n/NUM_THREADS; ++i)
 	{
-		int random = rand();
+		random = rand();
 		if (isPrime(random))
 		{
-			sum = sum + random;
+			sum += random;
 			primeCounter++;
 		}
 		pthread_mutex_lock(&lock);
@@ -64,12 +65,11 @@ int main(int argc, char *argv[])
 	//init rundom generator
 	int random;
 	pthread_t threads[NUM_THREADS];
-	void *retvals[NUM_THREADS];
 	srand(randomPivot);
 
 	for (int i = 0; i < NUM_THREADS; ++i)
 	{
-		if (pthread_create(&threads[i], NULL, func, (void *)&randomPivot) != 0)
+		if (pthread_create(&threads[i], NULL, &func, (void *)&randomPivot) != 0)
 		{
 			fprintf(stderr, "error: Cannot create thread # %d\n", i);
 			break;
@@ -88,23 +88,3 @@ int main(int argc, char *argv[])
 	exit(0);
 }
 
-/*
-  pthread_t threads[NTHREADS];
-  void * retvals[NTHREADS];
-  int count;
-  for (count = 0; count < NTHREADS; ++count)
-    {
-      if (pthread_create(&threads[count], NULL, thread_func, "...") != 0)
-        {
-          fprintf(stderr, "error: Cannot create thread # %d\n", count);
-          break;
-        }
-    }
-  for (int i = 0; i < count; ++i)
-    {
-      if (pthread_join(threads[i], &retvals[i]) != 0)
-        {
-          fprintf(stderr, "error: Cannot join thread # %d\n", i);
-        }
-    }
-*/
