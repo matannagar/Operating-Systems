@@ -3,15 +3,13 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <math.h>
-#include <sys/types.h>
 
-#define NUM_THREADS 5
-#define run_n 10000000
+#define NUM_THREADS 4
 
+int *amount;
 pthread_mutex_t lock;
 long sum = 0;
 long primeCounter = 0;
-int count = 0;
 
 int isPrime(int num)
 {
@@ -30,90 +28,56 @@ int isPrime(int num)
 	return 1;
 }
 
-void *func(void *var)
+void *func()
 {
-	srand(*((int*)var));
-    long local_sum = 0, local_counter = 0;
-    unsigned int seed = 6;  //!! use your var in some way
-    for (int i = 0; i < run_n / NUM_THREADS; ++i)
-    {
-        // int random = rand_r(&seed);
-        int random = rand();
-        if (isPrime(random))
-        {
-            local_sum += random;
-            local_counter++;
-        }
-    }
-    pthread_mutex_lock(&lock);
-    sum += local_sum;
-    primeCounter += local_counter;
-    pthread_mutex_unlock(&lock);
-    return NULL;
+	long local_sum = 0, local_counter = 0, count = 0;
+	int limit = (*amount) / NUM_THREADS;
+	for (int i = 0; i < limit; ++i)
+	{
+		int random = rand();
+		if (isPrime(random))
+		{
+			local_sum += random;
+			local_counter++;
+			count++;
+			if (count == (*amount) / NUM_THREADS)
+				return NULL;
+		}
+	}
+	pthread_mutex_lock(&lock);
+	sum += local_sum;
+	primeCounter += local_counter;
+	if (count == (*amount))
+		return NULL;
+	pthread_mutex_unlock(&lock);
+	return NULL;
 }
 
 int main(int argc, char *argv[])
 {
-	pthread_t tid;
-
+	//make sure enough arguments were received
 	if (argc != 3)
 	{
 		printf("Too few arguments ");
 		printf("USAGE: ./primeCalc <prime pivot> <num of random numbers>");
 		exit(0);
 	}
-
+	//receive arguments from user
 	int randomPivot = atoi(argv[1]);
-	// int numOfRandomNumbers = atoi(argv[2]);
+	int numOfRandomNumbers = atoi(argv[2]);
+	amount = malloc(numOfRandomNumbers * sizeof(int));
+	*amount = numOfRandomNumbers;
 
-	//init rundom generator
-	int random;
+	//creating thread
 	pthread_t threads[NUM_THREADS];
 	srand(randomPivot);
-
-	///////////////////////////////////////////////////////////////
-	// id_t pid = fork(); //creating a child
-
-	// if (pid == 0)
-	// {
-	// 	//we are in child
-	// 	pid_t pid = fork(); // creating grandchild
-
-	// 	if (pid == 0)
-	// 	{
-	// 		//we are in grandchild
-	// 		func(&randomPivot);
-	// 		if (pid == 0)
-	// 		{
-	// 			//we are in grandchild
-	// 			func(&randomPivot);
-	// 		}
-	// 		else
-	// 		{
-	// 			func(&randomPivot);
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		func(&randomPivot);
-	// 	}
-	// }
-	// else
-	// {
-	// 	func(&randomPivot);
-	// }
-	/////////////////////////////////
-
+	//creating multiple threads , executing our function
 	for (int i = 0; i < NUM_THREADS; ++i)
 	{
-		if (pthread_create(&threads[i], NULL, &func, (void *)&randomPivot) != 0)
+		if (pthread_create(&threads[i], NULL, &func, NULL) != 0)
 		{
 			fprintf(stderr, "error: Cannot create thread # %d\n", i);
 			break;
-		}
-		else
-		{
-			printf("thread %d was created\n", i);
 		}
 	}
 	for (int i = 0; i < NUM_THREADS; ++i)
@@ -123,6 +87,7 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "error: Cannot join thread # %d\n", i);
 		}
 	}
+	free(amount);
 	pthread_mutex_destroy(&lock);
 	printf("%ld,%ld\n", sum, primeCounter);
 	// pthread_exit(NULL);
